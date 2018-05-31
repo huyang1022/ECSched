@@ -39,19 +39,19 @@ def cmp_agent(agent1, agent2):
 
 def plot_data(l):
     dx = 0.01
-    sx = -2
-    fx = 2
-    i = sx
+    sx = -1
+    fx = 5
+    i = 0
     y =[]
-    while i <= fx:
-        y.append(len([x for x in l if i < x <= i + dx]))
-        i += dx
+    while sx + dx * i < fx:
+        y.append(len([x for x in l if sx + dx * i <= x < sx + dx * (i + 1)]))
+        i += 1
 
     y = np.array(y)
     x = np.arange(sx,fx,dx)
 
     plt.plot(x, y.cumsum())
-    plt.show()
+
 
 def run():
 
@@ -62,7 +62,23 @@ def run():
 
     print "=============  ecs_dp vs. k8s  ================"
     l = cmp_agent(agent_data["ecs_dp"], agent_data["k8s"])
+    plt.subplot(2, 1, 1)
     plot_data(l)
+    print "=============  ecs_ml vs. k8s  ================"
+    l = cmp_agent(agent_data["ecs_ml"], agent_data["k8s"])
+    plot_data(l)
+    plt.legend(["dp-k8s","ml-k8s"])
+
+    print "=============  ecs_dp vs. swarm  ================"
+    l = cmp_agent(agent_data["ecs_dp"], agent_data["swarm"])
+    plt.subplot(2, 1, 2)
+    plot_data(l)
+    print "=============  ecs_ml vs. swarm  ================"
+    l = cmp_agent(agent_data["ecs_ml"], agent_data["swarm"])
+    plot_data(l)
+    plt.legend(["dp-swarm","ml-swarm"])
+    plt.show()
+
 
 if __name__ == "__main__":
     run()
