@@ -32,8 +32,9 @@ def run(agent):
 
     while True:
 
-        env.show()
+
         env.step()
+        env.show()
 
         while job_gen.job_sequence[job_idx] is not None:
             if (job_gen.job_sequence[job_idx].submission_time == current_time):   #  add job to environment
@@ -42,18 +43,19 @@ def run(agent):
             else:
                 break
 
-        if agent == "ecs":
-            ecs_agent.schedule(env)
-        elif agent =="k8s":
-            k8s_agent.schedule(env)
-        elif agent == "pack":
-            pack_agent.schedule(env)
-        elif agent == "ecs_dp":
-            ecs_dp_agent.schedule(env)
-        elif agent == "ecs_ml":
-            ecs_ml_agent.schedule(env)
-        elif agent == "swarm":
-            swarm_agent.schedule(env)
+        for i in xrange(env.pa.schedule_qps):
+            if agent == "ecs":
+                ecs_agent.schedule(env)
+            elif agent =="k8s":
+                k8s_agent.schedule(env)
+            elif agent == "pack":
+                pack_agent.schedule(env)
+            elif agent == "ecs_dp":
+                ecs_dp_agent.schedule(env)
+            elif agent == "ecs_ml":
+                ecs_ml_agent.schedule(env)
+            elif agent == "swarm":
+                swarm_agent.schedule(env)
 
         if job_gen.job_sequence[job_idx] is None:
             if env.status() == "Idle": # finish all jobs

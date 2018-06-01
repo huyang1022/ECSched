@@ -19,5 +19,6 @@ class Parameter(object):
         self.job_interval = 3                           # average inter-arrival time
         self.job_seed = 77                              # random seed for job generating
 
+        self.schedule_qps = 50                         # requests per second in scheduler
 
         # usage: job_max_len * 4 / 45 / interval / mac_num
