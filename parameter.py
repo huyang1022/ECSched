@@ -6,7 +6,7 @@ class Parameter(object):
 
 
         self.res_num = 2                                # number of resources in the cluster
-        self.res_slot = 50                            # maximum number of resource slots
+        self.res_slot = 100                            # maximum number of resource slots
 
         self.mac_num = 50                               # number of machines in the cluster
         self.mac_max_slot = self.res_slot               # maximum number of resource slots of machine
