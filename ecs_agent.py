@@ -125,7 +125,7 @@ def schedule(env):
     for i in act_list:
         env.pop_job(i.job_id)
 
-    return act_list
+    return len(act_list)
 
 
 
