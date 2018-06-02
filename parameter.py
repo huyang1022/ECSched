@@ -21,5 +21,6 @@ class Parameter(object):
 
 
         self.ecs_num = 100                              # maximum number of jobs that can be processed in ecs scheduler
+        self.agent = "None"
 
         # usage: job_max_len * 4 / 45 / interval / mac_num

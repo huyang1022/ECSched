@@ -16,6 +16,9 @@ class Environment(object):
         self.running_jobs = []  # set of running jobs
         self.finished_jobs = [] # set of finished jobs
 
+
+        self.log = open("log/%s" % (pa.agent), "w")   #file to record the logs
+
     def add_machine(self, mac):
         # type: (Machine) -> None
         self.macs.append(mac)
@@ -83,8 +86,26 @@ class Environment(object):
             return "Pending"
         return "Idle"
 
+    def get_usage(self, res_id):
+        res_used = 0
+        res_total = 0
+        for i in self.macs:
+            res_total += (i.state[res_id] >= 0).sum()
+            res_used += (i.state[res_id] > 0).sum()
+        return res_used * 1.0 / res_total
+
+
+
     def show(self):
-        print "Time =",self.current_time, "  Pending =", self.job_count, "  Running =",len(self.running_jobs), "  Finished =",len(self.finished_jobs), "============================"
+        running_num = len(self.running_jobs)
+        finished_num = len(self.finished_jobs)
+        res_usage = []
+        for i in xrange(self.pa.res_num):
+            res_usage.append(self.get_usage(i))
+
+
+        print "== Agent:%s, Time:%d, Pend:%d, Run:%d, Finish:%d, Cpu:%f, Mem:%f =="  %(self.pa.agent, self.current_time, self.job_count, running_num, finished_num, res_usage[0], res_usage[1])
+        self.log.write( "Agent %s Time %d Pend %d Run %d Finish %d Cpu %f Mem %f \n" %(self.pa.agent, self.current_time, self.job_count, running_num, finished_num, res_usage[0], res_usage[1]))
         # print "Machine: =========================================================="
         # for i in xrange(self.mac_count):
         #     self.macs[i].show()

@@ -17,6 +17,7 @@ def run(agent):
     Job.reset()
 
     pa = Parameter()
+    pa.agent = agent
     env = Environment(pa)
 
     mac_gen = MacGenerator(pa)

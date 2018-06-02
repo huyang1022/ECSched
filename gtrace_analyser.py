@@ -39,11 +39,11 @@ tDict = dict()
 tNum = -1
 tfNum = 0
 tName = ""
-sTime = 0
+sTime = 1000000000000
 tList = list()
 fo = open("Input", "w")
 
-for i in xrange(0, N):
+for i in xrange(4, N):
     file_path = "/Users/Oceans/Git/Google-trace/task_events/part-%05d-of-00500.csv" % (i)
     with open(file_path, 'rb') as fi:
         lines = csv.reader(fi)
@@ -87,7 +87,7 @@ j = 0
 
 for i in tList:
     if i.status == 1:
-        if random.random() <= 0.12:
+        if random.random() <= 0.13:
             tStart = (i.s_time - sTime) / 1000000
             tDuration = (i.f_time - i.s_time) / 1000000
             # if tDuration > 5000: continue
