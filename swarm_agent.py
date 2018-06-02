@@ -29,7 +29,6 @@ def schedule(env):
             act_list.append(act)
             act.show()
             env.take_act(act)
-            break
 
     for i in act_list:
         env.pop_job(i.job_id)

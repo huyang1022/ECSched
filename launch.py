@@ -43,19 +43,18 @@ def run(agent):
             else:
                 break
 
-        for i in xrange(env.pa.schedule_qps):
-            if agent == "ecs":
-                if not ecs_agent.schedule(env): break
-            elif agent =="k8s":
-                if not k8s_agent.schedule(env): break
-            elif agent == "pack":
-                if not pack_agent.schedule(env): break
-            elif agent == "ecs_dp":
-                if not ecs_dp_agent.schedule(env): break
-            elif agent == "ecs_ml":
-                if not ecs_ml_agent.schedule(env): break
-            elif agent == "swarm":
-                if not swarm_agent.schedule(env): break
+        if agent == "ecs":
+            ecs_agent.schedule(env)
+        elif agent =="k8s":
+            k8s_agent.schedule(env)
+        elif agent == "pack":
+            pack_agent.schedule(env)
+        elif agent == "ecs_dp":
+            ecs_dp_agent.schedule(env)
+        elif agent == "ecs_ml":
+            ecs_ml_agent.schedule(env)
+        elif agent == "swarm":
+            swarm_agent.schedule(env)
 
         if job_gen.job_sequence[job_idx] is None:
             if env.status() == "Idle": # finish all jobs

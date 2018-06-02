@@ -46,7 +46,7 @@ def spfa(source, sink, edges, links, path):
         return False
 
 
-def schedule(env):
+def run(env):
     # type: (Environment) -> object
 
     edges = []
@@ -56,7 +56,7 @@ def schedule(env):
     maxflow = 0
 
     mac_num = env.mac_count
-    job_num = min(env.job_count, env.pa.job_process_num)
+    job_num = min(env.job_count, env.pa.ecs_num)
     source = 0
     sink = mac_num + job_num + 1
 
@@ -119,7 +119,10 @@ def schedule(env):
 
     return len(act_list)
 
-
+def schedule(env):
+    # type: (Environment) -> None
+    for i in xrange(env.pa.job_process_num):
+        if not run(env): break
 
 #
 # if __name__ == "__main__":
