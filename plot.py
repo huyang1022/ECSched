@@ -13,6 +13,26 @@ def read_data(agent):
 
     return ret_list
 
+def read_log(agent):
+    ret_list= list()
+    in_file = open("log/%s" % agent, "r")
+    num = 0
+    cpu_usage = 0.0
+    mem_usage = 0.0
+
+    while True:
+        line = in_file.readline()
+        line = line.split()
+        if not line: break
+        cpu = float(line[11])
+        mem = float(line[13])
+        if cpu > 0:
+            num += 1
+            cpu_usage += cpu
+            mem_usage += mem
+
+    print "Agent: %s,  Cpu: %f,  Mem: %f" % (agent, cpu_usage/num, mem_usage/num)
+
 def cmp_agent(agent1, agent2):
     l = list()
     sum_ratio = 0
@@ -59,6 +79,7 @@ def run():
     agent = ["ecs_ml", "ecs_dp", "swarm", "k8s"]
     for i in agent:
         agent_data[i] = read_data(i)
+        read_log(i)
 
     print "=============  ecs_dp vs. k8s  ================"
     l = cmp_agent(agent_data["ecs_dp"], agent_data["k8s"])
