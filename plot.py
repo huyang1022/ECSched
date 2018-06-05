@@ -19,6 +19,9 @@ def read_log(agent):
     num = 0
     cpu_usage = 0.0
     mem_usage = 0.0
+    pend_num = 0
+    pend_cpu = 0.0
+    pend_mem = 0.0
 
     while True:
         line = in_file.readline()
@@ -30,8 +33,14 @@ def read_log(agent):
             num += 1
             cpu_usage += cpu
             mem_usage += mem
+            if int(line[5]) > 0:
+                pend_num += 1
+                pend_cpu += cpu
+                pend_mem += mem
 
     print "Agent: %s,  Cpu: %f,  Mem: %f" % (agent, cpu_usage/num, mem_usage/num)
+    if pend_num>0:
+        print "Agent: %s,  Pend Cpu: %f,  Pend Mem: %f" % (agent, pend_cpu/pend_num, pend_mem/pend_num)
 
 def cmp_agent(agent1, agent2):
     l = list()
@@ -76,7 +85,7 @@ def plot_data(l):
 def run():
 
     agent_data = dict()
-    agent = ["ecs_ml", "ecs_dp", "swarm", "k8s"]
+    agent = ["ecs_dp", "ecs_ml", "swarm", "k8s"]
     for i in agent:
         agent_data[i] = read_data(i)
         read_log(i)
