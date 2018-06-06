@@ -129,7 +129,7 @@ def run(env):
 
 def schedule(env):
     # type: (Environment) -> None
-    for i in xrange(env.pa.job_process_num):
+    for i in xrange(env.pa.sched_num):
         if not run(env): break
 
 

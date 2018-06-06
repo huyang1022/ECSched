@@ -4,8 +4,9 @@ from element import Action
 def schedule(env):
     # type: (Environment) -> object
 
-    job_num = min(env.job_count, env.pa.job_process_num)
+    job_num = min(env.job_count, env.pa.sched_num)
     act_list = []
+    pop_list = []
 
     for i in xrange(job_num):
         max_score = 0
@@ -27,8 +28,14 @@ def schedule(env):
             act_list.append(act)
             act.show()
             env.take_act(act)
+        else:
+            pop_list.append(env.jobs[i])
 
     for i in act_list:
         env.pop_job(i.job_id)
+
+    for i in pop_list:
+        env.pop_job(i.id)
+        env.add_job(i)
 
     return len(act_list)

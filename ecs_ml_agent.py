@@ -55,6 +55,7 @@ def run(env):
     mincost = 0
     maxflow = 0
 
+    job_set = set()
     mac_num = env.mac_count
     job_num = min(env.job_count, env.pa.ecs_num)
     source = 0
@@ -81,6 +82,7 @@ def run(env):
                 score -= env.jobs[i].res_vec[k] * 1.0 / res_avail.sum()
 
             if score < 0:
+                job_set.add(i)
                 add_edge(i + 1, job_num + j + 1, 1, score, edges, links)
 
 
@@ -106,22 +108,30 @@ def run(env):
     # print maxflow, mincost
 
     act_list = []
+    pop_list = []
     for i in xrange(job_num):
-        for j in links[i + 1]:
-            if edges[j].f == 0 and edges[j].c < 0:
-                act = Action(env.jobs[i].id, env.macs[edges[j].v - job_num - 1].id)
-                act.show()
-                env.take_act(act)
-                act_list.append(act)
+        if i not in job_set:
+            pop_list.append(env.jobs[i])
+        else:
+            for j in links[i + 1]:
+                if edges[j].f == 0 and edges[j].c < 0:
+                    act = Action(env.jobs[i].id, env.macs[edges[j].v - job_num - 1].id)
+                    act.show()
+                    env.take_act(act)
+                    act_list.append(act)
 
     for i in act_list:
         env.pop_job(i.job_id)
+
+    for i in pop_list:
+        env.pop_job(i.id)
+        env.add_job(i)
 
     return len(act_list)
 
 def schedule(env):
     # type: (Environment) -> None
-    for i in xrange(env.pa.job_process_num):
+    for i in xrange(env.pa.sched_num):
         if not run(env): break
 
 #
