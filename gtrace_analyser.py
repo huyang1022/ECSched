@@ -33,17 +33,17 @@ class TaskInfo(object):
         return self.s_time < other.s_time
 
 
-N = 10
+N = 0
 
 tDict = dict()
 tNum = -1
 tfNum = 0
 tName = ""
-sTime = 1000000000000
+sTime = sys.maxint
 tList = list()
 fo = open("Input", "w")
 
-for i in xrange(4, N):
+for i in xrange(N, N + 20):
     file_path = "/Users/Oceans/Git/Google-trace/task_events/part-%05d-of-00500.csv" % (i)
     with open(file_path, 'rb') as fi:
         lines = csv.reader(fi)
@@ -52,7 +52,7 @@ for i in xrange(4, N):
             tType = l[5]
             tTime = int(l[0])
             if tTime == 0: continue
-            if (tTime - sTime) / 1000000  > 5 * 60 * 60: break
+            if (tTime - sTime) / 1000000  > 0.1 * 60 * 60: break
             tCpu = float(l[9])
             tMem = float(l[10])
 
@@ -87,16 +87,19 @@ j = 0
 
 for i in tList:
     if i.status == 1:
-        if random.random() <= 0.13:
+        if random.random() <= 0.1:
             tStart = (i.s_time - sTime) / 1000000
             tDuration = (i.f_time - i.s_time) / 1000000
+            tCpu = max(int(math.ceil(i.r_cpu * 100)),1)
+            tMem = max(int(math.ceil(i.r_mem * 100)),1)
+            # if (tCpu <= 1 and tMem <= 1) or (tCpu == tMem): continue
             # if tDuration > 5000: continue
 
             j += 1
             cMax = max(cMax, i.r_cpu)
             mMax = max(mMax, i.r_mem)
             dMax = max(dMax, tDuration)
-            fo.write("%d %d %d %d %d\n" % (j, tStart, tDuration , max(int(math.ceil(i.r_cpu * 100)),1)  , max(int(math.ceil(i.r_mem * 100)),1)))
+            fo.write("%d %d %d %d %d\n" % (j, tStart, tDuration , tCpu, tMem))
 
 fo.close()
 print tNum

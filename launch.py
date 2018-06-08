@@ -3,12 +3,7 @@ from parameter import Parameter
 from mac_generator import MacGenerator
 from job_generator import JobGenerator
 from element import Machine, Job
-import pack_agent
-import ecs_agent
-import k8s_agent
-import ecs_ml_agent
-import ecs_dp_agent
-import swarm_agent
+from agent import ecs_agent, ecs_dp_agent, ecs_ml_agent, swarm_agent, pack_agent, k8s_agent
 import plot
 
 def run(agent):

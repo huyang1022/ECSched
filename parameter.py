@@ -13,15 +13,16 @@ class Parameter(object):
 
 
         self.job_queue_num = 100000                        # maximum number of jobs in the queue
-        # self.job_process_num = 5                        # maximum number of jobs that can be processed at one time (qps)
+        self.job_process_num = 100                        # maximum number of jobs that can be processed at one time (qps)
         self.job_max_len = 675                         # maximum duration of jobs
         self.job_max_slot = self.res_slot               # maximum number of requested resource
         self.job_interval = 3                           # average inter-arrival time
         self.job_seed = 77                              # random seed for job generating
 
 
-        self.sched_num = 5                              # number of schedules at one time
-        self.ecs_num = 100                              # maximum number of jobs that can be processed in ecs scheduler
+        self.sched_num = 50                             # number of schedules at one time
+        self.sched_flag = False                         # flag of job recycle
+        self.ecs_num = 5                                # maximum number of jobs that can be processed in ecs scheduler
         self.agent = "None"
 
         # usage: job_max_len * 4 / 45 / interval / mac_num
