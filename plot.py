@@ -50,7 +50,7 @@ def cmp_agent(agent1, agent2):
     for i in xrange(len(agent1)):
         a = agent1[i]
         b = agent2[i]
-        ratio = b * 1.0 / a - 1
+        ratio = b * 1.0 / a
         # ratio = 1 - a * 1.0 / b
         l.append(ratio)
         sum_ratio += ratio
@@ -68,8 +68,8 @@ def cmp_agent(agent1, agent2):
 
 def plot_data(l):
     dx = 0.01
-    sx = -1
-    fx = 5
+    sx = 0.5
+    fx = 3
     i = 0
     y =[]
     while sx + dx * i < fx:

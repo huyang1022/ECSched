@@ -32,12 +32,14 @@ def run(agent):
         env.step()
         env.show()
 
-        while job_gen.job_sequence[job_idx] is not None:
+        while ( env.job_count < pa.job_queue_num and
+                job_gen.job_sequence[job_idx] is not None and
+                job_gen.job_sequence[job_idx].submission_time <= current_time
+        ):
+
             if (job_gen.job_sequence[job_idx].submission_time == current_time):   #  add job to environment
                 env.add_job(job_gen.job_sequence[job_idx])
-                job_idx += 1
-            else:
-                break
+            job_idx += 1
 
         if agent == "ecs":
             ecs_agent.schedule(env)
