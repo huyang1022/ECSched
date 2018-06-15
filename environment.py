@@ -17,7 +17,8 @@ class Environment(object):
         self.finished_jobs = [] # set of finished jobs
 
 
-        self.log = open("log/%s" % (pa.agent), "w")   #file to record the logs
+        self.time_file = open("log/%s" % (pa.agent), "w")   #file to record the logs
+        self.job_file = open("data/%s" % (pa.agent), "w")  # file to record the logs
 
     def add_machine(self, mac):
         # type: (Machine) -> None
@@ -96,7 +97,7 @@ class Environment(object):
 
 
 
-    def show(self):
+    def time_log(self):
         running_num = len(self.running_jobs)
         finished_num = len(self.finished_jobs)
         res_usage = []
@@ -105,7 +106,7 @@ class Environment(object):
 
 
         print "== Agent:%s, Time:%d, Pend:%d, Run:%d, Finish:%d, Cpu:%f, Mem:%f =="  %(self.pa.agent, self.current_time, self.job_count, running_num, finished_num, res_usage[0], res_usage[1])
-        self.log.write( "Agent %s Time %d Pend %d Run %d Finish %d Cpu %f Mem %f \n" %(self.pa.agent, self.current_time, self.job_count, running_num, finished_num, res_usage[0], res_usage[1]))
+        self.time_file.write( "Agent %s Time %d Pend %d Run %d Finish %d Cpu %f Mem %f \n" %(self.pa.agent, self.current_time, self.job_count, running_num, finished_num, res_usage[0], res_usage[1]))
         # print "Machine: =========================================================="
         # for i in xrange(self.mac_count):
         #     self.macs[i].show()
@@ -114,3 +115,11 @@ class Environment(object):
         #     self.jobs[i].show()
 
 
+    def job_log(self):
+        self.finished_jobs.sort(key=lambda x: x.id)
+        for i in self.finished_jobs:
+            self.job_file.write("%d %d \n" % (i.id, i.starting_time - i.submission_time + i.execution_time))
+
+    def finish(self):
+        self.time_file.close()
+        self.job_file.close()

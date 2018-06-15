@@ -30,7 +30,7 @@ def run(agent):
 
 
         env.step()
-        env.show()
+        env.time_log()
 
         while ( env.job_count < pa.job_queue_num and
                 job_gen.job_sequence[job_idx] is not None and
@@ -59,15 +59,8 @@ def run(agent):
                 break
         current_time += 1
 
-
-    env.finished_jobs.sort(key = lambda x: x.id)
-    file_path = "data/%s" % (agent)
-    out_file = open(file_path, "w")
-    for i in env.finished_jobs:
-        out_file.write("%d %d \n" % (i.id, i.starting_time - i.submission_time + i.execution_time))
-
-
-
+    env.job_log()
+    env.finish()
 
 def main():
     run("ecs_dp")
