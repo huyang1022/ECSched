@@ -34,6 +34,9 @@ class TaskInfo(object):
 
 
 N = 0
+H = 5 * 60 * 60
+R = 1
+K = 400
 
 tDict = dict()
 tNum = -1
@@ -52,7 +55,7 @@ for i in xrange(N, N + 20):
             tType = l[5]
             tTime = int(l[0])
             if tTime == 0: continue
-            if (tTime - sTime) / 1000000  > 0.1 * 60 * 60: break
+            if (tTime - sTime) / 1000000  > H: break
             tCpu = float(l[9])
             tMem = float(l[10])
 
@@ -79,29 +82,53 @@ for i in xrange(N, N + 20):
                         tList[j].status = 1
     fi.close()
 
-cMax = 0
-mMax = 0
-dMax = 0
 tList.sort()
-j = 0
 
+jobNum = 0
+
+sumDuration = 0.0
+sumCpu = 0.0
+sumMem = 0.0
+
+maxDuration = 0
+maxCpu = 0
+maxMem = 0
+
+usageCpu = 0.0
+usageMem = 0.0
 for i in tList:
     if i.status == 1:
-        if random.random() <= 0.1:
+        if random.random() <= R:
             tStart = (i.s_time - sTime) / 1000000
             tDuration = (i.f_time - i.s_time) / 1000000
-            tCpu = max(int(math.ceil(i.r_cpu * 100)),1)
-            tMem = max(int(math.ceil(i.r_mem * 100)),1)
-            # if (tCpu <= 1 and tMem <= 1) or (tCpu == tMem): continue
+            tCpu = max(int(math.ceil(i.r_cpu * K)),1)
+            tMem = max(int(math.ceil(i.r_mem * K)),1)
+            if tCpu > 50 or tMem > 50: continue
+            # if tCpu <= 1 and tMem <= 1: continue
+            # if tCpu == tMem: continue
             # if tDuration > 5000: continue
 
-            j += 1
-            cMax = max(cMax, i.r_cpu)
-            mMax = max(mMax, i.r_mem)
-            dMax = max(dMax, tDuration)
-            fo.write("%d %d %d %d %d\n" % (j, tStart, tDuration , tCpu, tMem))
+            jobNum += 1
+            usageCpu += tCpu * tDuration
+            usageMem += tMem * tDuration
+            sumCpu += tCpu
+            sumMem += tMem
+            sumDuration += tDuration
+            maxCpu = max(maxCpu, tCpu)
+            maxMem = max(maxMem, tMem)
+            maxDuration = max(maxDuration, tDuration)
+            # fo.write("%d %d %d %d %d\n" % (jobNum, tStart, tDuration , tCpu, tMem))
 
 fo.close()
-print tNum
-print tfNum
-print cMax, mMax, dMax
+
+avgCpu = sumCpu/jobNum
+avgMem = sumMem/jobNum
+avgDuration = sumDuration/jobNum
+
+
+print "total jobs:", tfNum
+print "select jobs:", jobNum
+print "maxCpu:", maxCpu, " maxMem:", maxMem, "maxDuration:", maxDuration
+print "avgCpu:", avgCpu, " avgMem:", avgMem, "avgDuration:", avgDuration
+print "avgCpu Usage:", usageCpu / H / 1750
+print "avgMem Usage:", usageMem / H / 1750

@@ -47,23 +47,28 @@ def cmp_agent(agent1, agent2):
     sum_ratio = 0
     max_ratio = 0
     min_ratio = 1
+    sum_a = 0.0
+    sum_b = 0.0
     for i in xrange(len(agent1)):
         a = agent1[i]
         b = agent2[i]
         ratio = b * 1.0 / a
         # ratio = 1 - a * 1.0 / b
         l.append(ratio)
+        sum_a += a
+        sum_b += b
         sum_ratio += ratio
         max_ratio = max(ratio, max_ratio)
         min_ratio = min(ratio, min_ratio)
 
     l.sort()
     print "Total: ", len(l)
-    print "Reduction: ", len([x for x in l if x > 0])
-    print "Increment: ", len([x for x in l if x < 0])
-    print "Maximum Improve: ", max_ratio * 100
-    print "Minimum Improve: ", min_ratio * 100
-    print "Average Improve: ", sum_ratio / len(l) * 100
+    print "Reduction: ", len([x for x in l if x > 1])
+    print "Increment: ", len([x for x in l if x < 1])
+    print "Maximum Improve: ", max_ratio
+    print "Minimum Improve: ", min_ratio
+    print "Average Ratio Improve: ", sum_ratio / len(l)
+    print "Average Duration Improve: ", sum_b / sum_a
     return l
 
 def plot_data(l):
@@ -75,6 +80,7 @@ def plot_data(l):
     while sx + dx * i < fx:
         y.append(len([x for x in l if sx + dx * i <= x < sx + dx * (i + 1)]))
         i += 1
+
 
     y = np.array(y)
     x = np.arange(sx,fx,dx)
